@@ -35,3 +35,15 @@ function onEndedPlayer() {
     player.off('timeupdate', lodashOn);
     localStorage.removeItem(TIME);
 }
+
+const rusnya = document.querySelectorAll('img[src="/images/custom/enemy.png"]');
+
+window.addEventListener("click", (e) => {
+    rusnya.forEach(el => {
+        console.log(e.clientX, e.clientY);
+        el.style.transition = 'all 2s ease-out';
+        el.style.left = `${e.clientX}px`;
+        el.style.top = `${e.clientY}px`;
+        el.style.transform = '';
+    });
+});
