@@ -1,11 +1,12 @@
+'use strict';
 import Player from '@vimeo/player';
-import lodash from "lodash.throttle";
+import throttle from "lodash.throttle";
 
 const iframeEl = document.querySelector('iframe');
 const player = new Player(iframeEl);
 const TIME = 'currentTime';
 
-const lodashOn = lodash(onPlayerTimeUpdate, 1000);
+const lodashOn = throttle(onPlayerTimeUpdate, 1000, { 'trailing': false });
 
 player.on('timeupdate', lodashOn);
 function onPlayerTimeUpdate(e) {
@@ -13,9 +14,8 @@ function onPlayerTimeUpdate(e) {
 }
 
 const currentTime = Number(localStorage.getItem(TIME));
-console.log(currentTime);
 
-player.setCurrentTime(currentTime).then(function() {
+player.setCurrentTime(currentTime).then(function(seconds) {
     // seconds = the actual time that the player seeked to
 }).catch(function(error) {
     switch (error.name) {
@@ -28,3 +28,10 @@ player.setCurrentTime(currentTime).then(function() {
             break;
     }
 });
+
+player.on('ended', onEndedPlayer);
+
+function onEndedPlayer() {
+    player.off('timeupdate', lodashOn);
+    localStorage.removeItem(TIME);
+}
