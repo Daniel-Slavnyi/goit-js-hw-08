@@ -1,4 +1,6 @@
 'use strict';
+import throttle from "lodash.throttle";
+
 const formEl = document.querySelector('.feedback-form'),
     STORAGE_KEY = 'data-form';
 
@@ -9,7 +11,7 @@ Object.entries(savedData).forEach(([name, value]) => {
     });
 
 
-formEl.addEventListener('input', onFormElInput);
+formEl.addEventListener('input', throttle(onFormElInput, 500));
 
 function onFormElInput(e) {
     const { name, value } = e.target;
